@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page</title>
+    <link type="text/css" rel="stylesheet" href="style.css" />
+</head>
+<body class="minecraft">
+    <div class="wrapper load"></div>
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="calculator.js"></script>
+    <script src="app.js"></script>
+
+    <template id="calculate-question">
+        <div class="header">
+            <h1>%question%</h1>
+        </div>
+        <div class="body">
+            <form action="#">
+                <input type="number" name="answer" class="form-control">
+                <input type="submit" value="Отправить" class="form-control btn">
+            </form>
+        </div>
+    </template>
+</body>
+</html>

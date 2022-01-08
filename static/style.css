@@ -1,0 +1,55 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+body.minecraft {
+    background: url("img/minecraft/bg.png");
+}
+.wrapper {
+    max-width: 600px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 5px;
+}
+.wrapper.load:before {
+    content: " ";
+    position: absolute;
+    background: url(img/loader.gif) no-repeat;
+    background-size: 100% 100%;
+    width: 360px;
+    height: 240px;
+    left: 50%;
+    margin-left: -180px;
+    top: 0;
+}
+.header {
+    text-align: center;
+}
+.form-control {
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #c2c2c2;
+    border-radius: 10px;
+    display: block;
+    margin: 5px 0;
+    font-size: 25px;
+}
+.form-control:focus {
+    outline: 0;
+    border-color: #7a7a7a;
+}
+.btn {
+
+}
+.minecraft .btn {
+    background: url(img/minecraft/btn.png);
+    background-size: contain;
+    color: #6bcb2f;
+    text-shadow: 1px 1px 2px rgb(0 0 0);
+    -webkit-box-shadow: 1px 1px 5px 0px rgb(0 0 0 / 75%);
+    -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 1px 1px 5px 0px rgb(0 0 0 / 75%);
+    cursor: pointer;
+}
