@@ -2,6 +2,8 @@ package api
 
 import (
 	"browserGui/internal/repository"
+	"crypto/sha1"
+	"encoding/hex"
 	json2 "encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -51,6 +53,14 @@ func CalcSuccess(code, message, progress string) CalcAnswer {
 func NewCalculator() *calculator {
 	return &calculator{}
 }
+func Sha1String(s string) string {
+	bytes := []byte(s)
+	bytes = append(bytes, repository.GetTokenSecretKey()...)
+
+	h := sha1.New()
+	h.Write(bytes)
+	return hex.EncodeToString(h.Sum(nil))
+}
 
 func (c *calculator) Register(r *mux.Router) {
 	r.HandleFunc("/calculator/getQuestion", c.getQuestion)
@@ -85,7 +95,7 @@ func (c *calculator) getQuestion(w http.ResponseWriter, r *http.Request) {
 		repo.Set("failProgress", "50")
 	}
 
-	repo.Set("calc_answer", answer)
+	repo.Set("calc_answer", Sha1String(answer))
 
 	q := Question{
 		Text: text,
@@ -116,7 +126,7 @@ func (c *calculator) checkAnswer(w http.ResponseWriter, r *http.Request) {
 
 	realAnswer, _ := repository.GetRepository(r.Context()).Get("calc_answer")
 
-	if answer.Answer == realAnswer {
+	if Sha1String(answer.Answer) == realAnswer {
 		progress := failProgress - 2
 
 		code := "success"
