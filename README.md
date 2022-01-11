@@ -7,6 +7,8 @@
 
 Прогресс хранится в JWT токене. Общение с сервером идет через REST API.
 
+![Preview](https://raw.githubusercontent.com/MashinaMashina/go-browserGui/master/preview-images/Screenshot_34.png)
+
 Команды для сборки:
 1. go generate  browserGui/cmd/main
 2. go build -ldflags "-s -H windowsgui" browserGui/cmd/main
