@@ -3,24 +3,33 @@ package server
 import (
 	"browserGui/internal/api"
 	"browserGui/internal/programs"
+	"browserGui/internal/repository"
+	"github.com/gorilla/mux"
 	"net/http"
 	"time"
 )
 
 func NewServer() {
-	fs := http.FileServer(http.Dir("./static"))
+	router := mux.NewRouter()
 
-	http.HandleFunc("/api/keepalive", KeepAlive)
-	http.Handle("/", fs)
+	apiRouter := router.PathPrefix("/api/").Subrouter()
 
-	api.NewPing().Register()
-	api.NewCalculate().Register()
+	apiRouter.Use(repository.TokenMiddleware)
+	api.NewPing().Register(apiRouter)
+	api.NewCalculator().Register(apiRouter)
+
+	router.HandleFunc("/keepalive/", KeepAlive)
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+
+	http.Handle("/", router)
 
 	waitClose()
 
-	programs.OpenBrowserDelay("http://localhost:3000", time.Millisecond * 15)
+	port := "3001"
 
-	err := http.ListenAndServe(":3000", nil)
+	programs.OpenBrowserDelay("http://localhost:" + port, time.Millisecond * 15)
+
+	err := http.ListenAndServe(":" + port, nil)
 
 	if err != nil {
 		panic(err)

@@ -6,9 +6,15 @@
     <link type="text/css" rel="stylesheet" href="style.css" />
 </head>
 <body class="minecraft">
-    <div class="wrapper load"></div>
+    <div class="wrapper">
+        <div class="app-before"></div>
+        <div class="app load"></div>
+        <div class="app-after"></div>
+    </div>
+
     <script src="jquery-3.6.0.min.js"></script>
     <script src="calculator.js"></script>
+    <script src="progress.js"></script>
     <script src="app.js"></script>
 
     <template id="calculate-question">
@@ -20,6 +26,12 @@
                 <input type="number" name="answer" class="form-control">
                 <input type="submit" value="Отправить" class="form-control btn">
             </form>
+        </div>
+    </template>
+    <template id="progress">
+        <div class="progress-bar">
+            <div class="progress-now"></div>
+            <div class="finish"></div>
         </div>
     </template>
 </body>

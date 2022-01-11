@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -13,8 +14,8 @@ func NewPing() *ping {
 	return &ping{}
 }
 
-func (p *ping) Register() {
-	http.HandleFunc("/api/ping", p.ping)
+func (p *ping) Register(r *mux.Router) {
+	r.HandleFunc("/ping", p.ping)
 }
 
 func (p *ping) ping(w http.ResponseWriter, r *http.Request) {

@@ -1,24 +1,49 @@
 function runCalculator() {
-    setQuestion()
+    progressInit()
+    progressSetPercent(50)
+    newQuestion()
 }
 
-function setQuestion() {
+function newQuestion() {
+    $('[name="answer"]').removeClass('border-green').removeClass('border-red');
+
     showLoader()
-    $.post('/api/calculator/getQuestion').done(function (resp) {
+    api('calculator/getQuestion', {}, function (json) {
         hideLoader()
 
-        let json = JSON.parse(resp)
         let template = tpl('calculate-question');
 
         template = template.replace('%question%', json.question_text)
 
         wrap().html(template)
 
+        $('[name="answer"]').focus();
+
         wrap().find('form').on('submit', function (event) {
             event.preventDefault()
 
-            $.post('/api/calculator/checkAnswer').done(function (resp) {
-                console.log(resp)
+            api('calculator/checkAnswer', {answer: $('[name="answer"]', this).val()}, function (resp) {
+                progressSetPercent(resp.progress)
+
+                if (resp.success) {
+                    $('[name="answer"]').addClass('border-green')
+                } else {
+                    $('[name="answer"]').addClass('border-red')
+                }
+
+                setTimeout(function () {
+                    if (resp.code === 'you_lost') {
+                        alert('Вы проиграли')
+                        location.reload()
+                        return
+                    } else if (resp.code === 'you_win') {
+                        alert('Вы выиграли')
+                        window.close()
+                        return
+                    }
+                }, 150)
+
+                setTimeout(newQuestion, 300)
             });
         })
     })

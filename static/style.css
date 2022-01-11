@@ -12,7 +12,7 @@ body.minecraft {
     padding: 30px;
     border-radius: 5px;
 }
-.wrapper.load:before {
+.app.load:before {
     content: " ";
     position: absolute;
     background: url(img/loader.gif) no-repeat;
@@ -40,6 +40,12 @@ body.minecraft {
     outline: 0;
     border-color: #7a7a7a;
 }
+.border-green {
+    border-color: #00b900;
+}
+.border-red {
+    border-color: #ff1f1f;
+}
 .btn {
 
 }
@@ -52,4 +58,51 @@ body.minecraft {
     -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 1px 1px 5px 0px rgb(0 0 0 / 75%);
     cursor: pointer;
+    border: 0;
+}
+
+.progress-bar {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    margin: 10px 0;
+}
+.minecraft .progress-bar:after {
+    content: " ";
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    background: url(img/minecraft/lava.jpg);
+    background-size: auto 100%;
+    bottom: -10px;
+}
+.minecraft .progress-bar:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    background: url(img/minecraft/cobblestone.jpg);
+    background-size: auto 100%;
+    bottom: -10px;
+}
+.minecraft .progress-bar .finish {
+    position: absolute;
+    width: 46px;
+    height: 100px;
+    background: url(img/minecraft/steve.png) no-repeat;
+    background-size: auto 100%;
+    bottom: -10px;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}.minecraft .progress-bar .progress-now {
+    position: absolute;
+    width: 60px;
+    height: 100px;
+    background: url(img/minecraft/zombie.png) no-repeat;
+    background-size: auto 100%;
+    bottom: -10px;
+    top: 0;
+    left: 0;
+    z-index: 10;
 }
