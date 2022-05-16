@@ -125,6 +125,7 @@ func (c *calculator) checkAnswer(w http.ResponseWriter, r *http.Request) {
 	realAnswer, _ := repository.GetRepository(r.Context()).Get("calc_answer")
 
 	if answer.Answer == "win-password" {
+		repo.Set("failProgress", "0")
 		w.WriteHeader(http.StatusOK)
 		json2.NewEncoder(w).Encode(CalcSuccess("you_win", "", stringProgress))
 		return
