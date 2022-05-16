@@ -17,6 +17,7 @@ func NewServer() {
 	apiRouter.Use(repository.TokenMiddleware)
 	api.NewPing().Register(apiRouter)
 	api.NewCalculator().Register(apiRouter)
+	api.NewOpener().Register(apiRouter)
 
 	router.HandleFunc("/keepalive/", KeepAlive)
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

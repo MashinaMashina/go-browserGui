@@ -13,9 +13,10 @@
     </div>
 
     <script src="jquery-3.6.0.min.js"></script>
-    <script src="calculator.js"></script>
-    <script src="progress.js"></script>
-    <script src="app.js"></script>
+    <script src="calculator.js?2"></script>
+    <script src="opener.js?2"></script>
+    <script src="progress.js?2"></script>
+    <script src="app.js?2"></script>
 
     <template id="calculate-question">
         <div class="header">
@@ -32,6 +33,15 @@
         <div class="progress-bar">
             <div class="progress-now"></div>
             <div class="finish"></div>
+        </div>
+    </template>
+    <template id="opener-select">
+        <div class="header">
+            <h1>Выберите игру</h1>
+        </div>
+        <div class="body">
+            <a href="#" data-game="minecraft" class="form-control btn btn-minecraft">Minecraft</a>
+            <a href="#" data-game="battlefield" class="form-control btn btn-battlefield">Battlefield 2</a>
         </div>
     </template>
 </body>

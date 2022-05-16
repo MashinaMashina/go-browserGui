@@ -35,15 +35,13 @@ function newQuestion() {
                     if (resp.code === 'you_lost') {
                         alert('Вы проиграли')
                         location.reload()
-                        return
                     } else if (resp.code === 'you_win') {
                         alert('Вы выиграли')
-                        window.close()
-                        return
+                        runOpener()
+                    } else {
+                        setTimeout(newQuestion, 150)
                     }
                 }, 150)
-
-                setTimeout(newQuestion, 300)
             });
         })
     })

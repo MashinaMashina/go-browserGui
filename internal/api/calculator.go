@@ -9,8 +9,6 @@ import (
 	"github.com/gorilla/mux"
 	"math/rand"
 	"net/http"
-	"os"
-	"os/exec"
 	"strconv"
 	"time"
 )
@@ -133,16 +131,6 @@ func (c *calculator) checkAnswer(w http.ResponseWriter, r *http.Request) {
 		if progress <= 2 {
 			progress = 2
 			code = "you_win"
-
-			appdata, error := os.UserConfigDir()
-			if error != nil {
-				panic(error)
-			}
-
-			cmd := exec.Command(appdata + "\\.minecraft\\TL.exe")
-			if err := cmd.Start(); err != nil {
-				panic(err)
-			}
 		}
 
 		stringProgress = strconv.Itoa(progress)
@@ -151,7 +139,7 @@ func (c *calculator) checkAnswer(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json2.NewEncoder(w).Encode(CalcSuccess(code, "", stringProgress))
 	} else {
-		progress := failProgress + 10
+		progress := failProgress + 5
 
 		code := "incorrect_answer"
 		if progress >= 84 {
