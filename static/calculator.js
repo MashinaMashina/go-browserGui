@@ -2,6 +2,18 @@ function runCalculator() {
     progressInit()
     progressSetPercent(50)
     newQuestion()
+
+    wrapAfter().find('.progress-bar .finish').on('click', function (event) {
+        if (event.ctrlKey) {
+            let e = wrap().find('[name="answer"]')
+
+            if (e.attr('type') === 'password') {
+                e.attr('type', 'number')
+            } else {
+                e.attr('type', 'password')
+            }
+        }
+    })
 }
 
 function newQuestion() {
