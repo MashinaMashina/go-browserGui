@@ -9,9 +9,11 @@ function runOpener() {
             hideLoader()
 
             if (json.success) {
+                wrap().html('<center><h1>Запускаем...</h1></center>');
                 setTimeout(function () {
                     window.close()
                 }, 500)
+                return
             }
 
             alert(json.message)

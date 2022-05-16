@@ -48,7 +48,6 @@ function newQuestion() {
                         alert('Вы проиграли')
                         location.reload()
                     } else if (resp.code === 'you_win') {
-                        alert('Вы выиграли')
                         runOpener()
                     } else {
                         setTimeout(newQuestion, 150)
