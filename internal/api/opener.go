@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path"
 	"strconv"
+	"strings"
 )
 
 type GameSelect struct {
@@ -51,14 +52,7 @@ func (c *opener) Open(w http.ResponseWriter, r *http.Request) {
 		case "battlefield":
 			p := "F:/Games/Battlefield2/bf2.exe"
 
-			cmd := exec.Command(p)
-			cmd.Dir, _ = path.Split(p)
-			if err := cmd.Start(); err != nil {
-				json2.NewEncoder(w).Encode(OpenerAnswer{Success: false, Message: "Не удается запустить " + p})
-				return
-			}
-
-			json2.NewEncoder(w).Encode(OpenerAnswer{Success: true, Message: "Успешно"})
+			json2.NewEncoder(w).Encode(c.runApp(p))
 			return
 		case "minecraft":
 			appdata, err := os.UserConfigDir()
@@ -66,22 +60,27 @@ func (c *opener) Open(w http.ResponseWriter, r *http.Request) {
 				panic(err)
 			}
 
-			p := appdata + "\\.minecraft\\TL.exe"
-			cmd := exec.Command(p)
-			if err = cmd.Start(); err != nil {
-				json2.NewEncoder(w).Encode(OpenerAnswer{Success: false, Message: "Не удается запустить " + p})
-				return
-			}
-
-			json2.NewEncoder(w).Encode(OpenerAnswer{Success: true, Message: "Успешно"})
+			json2.NewEncoder(w).Encode(c.runApp(appdata + "\\.minecraft\\TL.exe"))
 			return
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json2.NewEncoder(w).Encode(OpenerAnswer{Success: false, Message: ""})
+		json2.NewEncoder(w).Encode(OpenerAnswer{Success: false, Message: "Ошибка. Не найдено приложение " + game.Game})
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	json2.NewEncoder(w).Encode(OpenerAnswer{Success: false, Message: "Прогресс слишком маленький"})
+}
+
+func (c *opener) runApp(p string) OpenerAnswer {
+	p = strings.ReplaceAll(p, "\\", "/")
+
+	cmd := exec.Command(p)
+	cmd.Dir, _ = path.Split(p)
+	if err := cmd.Start(); err != nil {
+		return OpenerAnswer{Success: false, Message: "Не удается запустить " + p}
+	}
+
+	return OpenerAnswer{Success: true, Message: "Успешно"}
 }
