@@ -13,6 +13,10 @@ import (
 	"time"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 type calculator struct {
 
 }
@@ -66,20 +70,37 @@ func (c *calculator) Register(r *mux.Router) {
 }
 
 func (c *calculator) getQuestion(w http.ResponseWriter, r *http.Request) {
-	rand.Seed(time.Now().UnixNano())
-
 	var a int
 	var b int
 	var answer string
 	var text string
 
-	if rand.Intn(2) == 1 {
+	rnd := rand.Intn(4)
+
+	fmt.Println(rnd)
+
+	switch rnd {
+	case 3:
+		a = rand.Intn(8) + 1
+		b = rand.Intn(8) + 1
+		c := a * b
+
+		// c / b = a
+		text = strconv.Itoa(c) + "/" + strconv.Itoa(b)
+		answer = strconv.Itoa(a)
+	case 2:
+		a = rand.Intn(99) + 1
+		b = rand.Intn(8) + 1
+
+		text = strconv.Itoa(a) + "*" + strconv.Itoa(b)
+		answer = strconv.Itoa(a * b)
+	case 1:
 		a = rand.Intn(99) + 1
 		b = rand.Intn(99) + 1
 
 		text = strconv.Itoa(a) + "+" + strconv.Itoa(b)
 		answer = strconv.Itoa(a + b)
-	} else {
+	default:
 		a = rand.Intn(95) + 5
 		b = rand.Intn(a - 1) + 1
 
@@ -146,7 +167,7 @@ func (c *calculator) checkAnswer(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json2.NewEncoder(w).Encode(CalcSuccess(code, "", stringProgress))
 	} else {
-		progress := failProgress + 5
+		progress := failProgress + 3
 
 		code := "incorrect_answer"
 		if progress >= 84 {
