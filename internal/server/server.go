@@ -1,12 +1,14 @@
 package server
 
 import (
+	"net/http"
+	"os"
+	"time"
+
 	"browserGui/internal/api"
 	"browserGui/internal/programs"
 	"browserGui/internal/repository"
 	"github.com/gorilla/mux"
-	"net/http"
-	"time"
 )
 
 func NewServer() {
@@ -26,11 +28,14 @@ func NewServer() {
 
 	waitClose()
 
-	port := "3001"
+	port := os.Getenv("BGUI_PORT")
+	if port == "" {
+		port = "3001"
+	}
 
-	programs.OpenBrowserDelay("http://localhost:" + port, time.Millisecond * 15)
+	programs.OpenBrowserDelay("http://localhost:"+port, time.Millisecond*15)
 
-	err := http.ListenAndServe(":" + port, nil)
+	err := http.ListenAndServe("localhost:"+port, nil)
 
 	if err != nil {
 		panic(err)

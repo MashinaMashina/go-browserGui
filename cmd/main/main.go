@@ -2,8 +2,17 @@
 
 package main
 
-import "browserGui/internal/server"
+import (
+	"fmt"
+
+	"browserGui/internal/server"
+	"github.com/joho/godotenv"
+)
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("err load .env:", err)
+	}
+
 	server.NewServer()
 }

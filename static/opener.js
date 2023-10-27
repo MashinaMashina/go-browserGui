@@ -1,22 +1,33 @@
 function runOpener() {
-    wrap().html(tpl('opener-select'))
+    api("opener/available", {}, function (json) {
+        let str = ""
+        json.forEach(function (program) {
+            str += '<a href="#" data-game="'+program.name+'" class="form-control btn btn-minecraft">'+program.name+'</a>'
+        })
 
-    wrap().find('a[data-game]').on('click', function (event) {
-        event.preventDefault()
+        let template = tpl('opener-select')
+        template = template.replace('%programs%', str)
 
-        showLoader()
-        api('opener/open', {game: $(this).data('game')}, function (json) {
-            hideLoader()
+        wrap().html(template)
 
-            if (json.success) {
-                wrap().html('<center><h1>Запускаем...</h1></center>');
-                setTimeout(function () {
-                    window.close()
-                }, 500)
-                return
-            }
+        wrap().find('a[data-game]').on('click', function (event) {
+            event.preventDefault()
 
-            alert(json.message)
+            showLoader()
+            api('opener/open', {game: $(this).data('game')}, function (json) {
+                hideLoader()
+
+                if (json.success) {
+                    wrap().html('<center><h1>Запускаем...</h1></center>');
+                    setTimeout(function () {
+                        window.close()
+                    }, 500)
+                    return
+                }
+
+                alert(json.message)
+            });
         });
-    });
+    })
+
 }

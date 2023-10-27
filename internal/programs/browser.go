@@ -24,7 +24,6 @@ func OpenBrowser(url string) {
 		panic(err)
 	}
 
-	fmt.Println(runtime.GOOS)
 }
 
 func OpenBrowserDelay(url string, delay time.Duration) {

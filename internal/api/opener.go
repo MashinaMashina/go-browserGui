@@ -1,36 +1,79 @@
 package api
 
 import (
-	"browserGui/internal/repository"
 	json2 "encoding/json"
-	"github.com/gorilla/mux"
+	"fmt"
 	"net/http"
 	"os"
 	"os/exec"
 	"path"
 	"strconv"
 	"strings"
+
+	"browserGui/internal/repository"
+	"github.com/gorilla/mux"
 )
 
 type GameSelect struct {
 	Game string `json:"game"`
 }
 
-type opener struct {
+type AvailableProgram struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
+}
 
+type opener struct {
+	programs []AvailableProgram
 }
 
 type OpenerAnswer struct {
-	Success bool `json:"success"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
 func NewOpener() *opener {
-	return &opener{}
+	programsStr := os.Getenv("BGUI_PROGRAMS")
+
+	if programsStr == "" {
+		programsStr = `[{"name":"Minecraft","path":"%appdata%\\.tlauncher\\legacy\\Minecraft\\TL.exe"}]`
+	}
+
+	var programs []AvailableProgram
+	if err := json2.Unmarshal([]byte(programsStr), &programs); err != nil {
+		panic(fmt.Errorf("can not parse programs str: %w", err))
+	}
+
+	appdata, err := os.UserConfigDir()
+	if err != nil {
+		panic(err)
+	}
+
+	availablePrograms := make([]AvailableProgram, 0, len(programs))
+	for _, program := range programs {
+		program.Path = strings.ReplaceAll(program.Path, "%appdata%", appdata)
+
+		if _, err = os.Stat(program.Path); err == nil {
+			availablePrograms = append(availablePrograms, program)
+		}
+	}
+
+	if len(availablePrograms) == 0 {
+		panic("not found available programs")
+	}
+
+	return &opener{
+		programs: availablePrograms,
+	}
 }
 
 func (c *opener) Register(r *mux.Router) {
 	r.HandleFunc("/opener/open", c.Open)
+	r.HandleFunc("/opener/available", c.Available)
+}
+
+func (c *opener) Available(w http.ResponseWriter, r *http.Request) {
+	json2.NewEncoder(w).Encode(c.programs)
 }
 
 func (c *opener) Open(w http.ResponseWriter, r *http.Request) {
@@ -48,20 +91,11 @@ func (c *opener) Open(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		switch game.Game {
-		case "battlefield":
-			p := "F:/Games/Battlefield2/bf2.exe"
-
-			json2.NewEncoder(w).Encode(c.runApp(p))
-			return
-		case "minecraft":
-			appdata, err := os.UserConfigDir()
-			if err != nil {
-				panic(err)
+		for _, program := range c.programs {
+			if program.Name == game.Game {
+				json2.NewEncoder(w).Encode(c.runApp(program.Path))
+				return
 			}
-
-			json2.NewEncoder(w).Encode(c.runApp(appdata + "\\.minecraft\\TL.exe"))
-			return
 		}
 
 		w.WriteHeader(http.StatusOK)
