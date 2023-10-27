@@ -15,6 +15,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 type calculator struct {
 	password string
 }
@@ -76,8 +80,6 @@ func (c *calculator) Register(r *mux.Router) {
 }
 
 func (c *calculator) getQuestion(w http.ResponseWriter, r *http.Request) {
-	rand.Seed(time.Now().UnixNano())
-
 	var a int
 	var b int
 	var answer string
