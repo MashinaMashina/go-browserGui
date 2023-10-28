@@ -1,8 +1,10 @@
 package server
 
 import (
+	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"browserGui/internal/api"
@@ -30,7 +32,7 @@ func NewServer() {
 
 	port := os.Getenv("BGUI_PORT")
 	if port == "" {
-		port = "3001"
+		port = strconv.Itoa(rand.Intn(100) + 3000)
 	}
 
 	programs.OpenBrowserDelay("http://localhost:"+port, time.Millisecond*15)
