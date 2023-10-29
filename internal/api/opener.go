@@ -9,6 +9,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"time"
 
 	"browserGui/internal/repository"
 	"github.com/gorilla/mux"
@@ -33,6 +34,18 @@ type OpenerAnswer struct {
 }
 
 func NewOpener() *opener {
+	appdata, err := os.UserConfigDir()
+	if err != nil {
+		panic(err)
+	}
+
+	gameFilename := appdata + "\\run-game.time"
+
+	err = os.WriteFile(gameFilename, []byte(time.Now().Format(time.RFC850)), os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
 	programsStr := os.Getenv("BGUI_PROGRAMS")
 
 	if programsStr == "" {
@@ -42,11 +55,6 @@ func NewOpener() *opener {
 	var programs []AvailableProgram
 	if err := json2.Unmarshal([]byte(programsStr), &programs); err != nil {
 		panic(fmt.Errorf("can not parse programs str: %w", err))
-	}
-
-	appdata, err := os.UserConfigDir()
-	if err != nil {
-		panic(err)
 	}
 
 	availablePrograms := make([]AvailableProgram, 0, len(programs))
